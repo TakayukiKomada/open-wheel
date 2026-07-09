@@ -2,13 +2,16 @@
 id: failure-0001
 namespace: io.gamefork
 title: SECURITY DEFINER functions silently bypass Row Level Security
+summary: A SECURITY DEFINER function runs with its creator's privileges and ignores Row Level Security entirely — any such function granted to anon/authenticated must re-implement the same visibility checks inside its body, or RLS is effectively off for whoever can call it.
 status: active
 tags: [postgres, supabase, rls, security-definer, security]
 created: 2026-07-02
+source: io.gamefork (promoted from a private wheel)
 origin: Production vulnerability on gamefork.io, found by static audit 2026-05-06; fixed and verified in production the same day. Window of exposure was about one month.
 stack: [postgresql, supabase, postgrest]
 supersedes: null
 superseded_by: null
+verified: 2026-05-06
 ---
 
 ## Context

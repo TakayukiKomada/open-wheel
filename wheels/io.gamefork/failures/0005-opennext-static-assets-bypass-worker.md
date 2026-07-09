@@ -2,13 +2,16 @@
 id: failure-0005
 namespace: io.gamefork
 title: On OpenNext + Cloudflare Workers, static assets are served before your Worker — headers() and _headers are silently ignored
+summary: On OpenNext + Cloudflare Workers, static assets are served by the ASSETS binding before your Worker runs, so Next.js headers(), public/_headers, and Worker shims are silently ignored for those paths. Only assets.run_worker_first globs in wrangler config route matching requests through the Worker.
 status: active
 tags: [cloudflare-workers, opennext, nextjs, static-assets, cors, headers]
 created: 2026-07-02
+source: io.gamefork (promoted from a private wheel)
 origin: Four consecutive failed production fixes on gamefork.games (2026-05-06) before root cause; the fifth attempt (run_worker_first) resolved it and was verified in production with curl.
 stack: [cloudflare-workers, opennext, nextjs, wrangler]
 supersedes: null
 superseded_by: null
+verified: 2026-05-06
 ---
 
 ## Context

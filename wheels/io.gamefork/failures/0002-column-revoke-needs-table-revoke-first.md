@@ -2,13 +2,16 @@
 id: failure-0002
 namespace: io.gamefork
 title: Column-level REVOKE UPDATE is a no-op while a table-level UPDATE grant remains
+summary: Column-level REVOKE UPDATE (col) has no effect while the role still holds a table-level UPDATE grant. Revoke table-level UPDATE first, then GRANT back only the columns that should be writable.
 status: active
 tags: [postgres, supabase, grant, revoke, rls, hardening]
 created: 2026-07-02
+source: io.gamefork (promoted from a private wheel)
 origin: Production migration failure on gamefork.io (2026-06); the built-in verification ASSERT caught it during production apply. Fixed with a follow-up commit, verified in production.
 stack: [postgresql, supabase, postgrest]
 supersedes: null
 superseded_by: null
+verified: 2026-06-19
 ---
 
 ## Context
