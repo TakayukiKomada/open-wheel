@@ -22,7 +22,7 @@ const TYPES = { failures: 'failure', design: 'design', code: 'code' };
 const TYPE_ALT = Object.keys(TYPES).join('|');
 const PREFIX_ALT = Object.values(TYPES).join('|');
 const VALID_STATUS = new Set(['active', 'superseded', 'deprecated']);
-const REQUIRED_KEYS = ['id', 'namespace', 'title', 'status', 'created', 'origin'];
+const REQUIRED_KEYS = ['id', 'namespace', 'title', 'summary', 'status', 'created', 'source', 'origin'];
 const NS_PATTERN = /^[a-z0-9]+(\.[a-z0-9-]+)+$/; // reverse-DNS-ish
 
 const errors = [];
@@ -96,6 +96,9 @@ if (!fs.existsSync(WHEELS_DIR)) {
         }
         if (fm.status === 'superseded' && (!fm.superseded_by || fm.superseded_by === 'null')) {
           errors.push(`${rel}: status is superseded but superseded_by is not set`);
+        }
+        if (fm.verified && fm.verified !== 'null' && !/^\d{4}-\d{2}-\d{2}$/.test(fm.verified)) {
+          errors.push(`${rel}: verified must be null or a YYYY-MM-DD date (got "${fm.verified}")`);
         }
         if (fm.id) fullIds.add(`${ns}/${expectedId}`);
       }

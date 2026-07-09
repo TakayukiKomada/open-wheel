@@ -2,13 +2,16 @@
 id: failure-0006
 namespace: io.gamefork
 title: You cannot verify object-storage deletion by GETting the public URL — CDN cache keeps serving 200 after a successful delete
+summary: After a successful object-storage delete, the CDN keeps serving the public URL with 200 until the cache TTL expires, so a GET cannot verify deletion. Judge deletion by the storage API's remove() return value, embedded in the delete route's response.
 status: active
 tags: [supabase, storage, r2, cdn, cache, delete, verification]
 created: 2026-07-02
+source: io.gamefork (promoted from a private wheel)
 origin: Production verification session on gamefork.io (2026-05-06): a deleted screenshot's URL kept returning 200, costing significant debugging time before the cache-vs-delete ambiguity was identified. Delete routes hardened afterwards.
 stack: [supabase-storage, cloudflare-r2, cdn]
 supersedes: null
 superseded_by: null
+verified: 2026-05-06
 ---
 
 ## Context

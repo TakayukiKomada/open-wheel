@@ -2,13 +2,16 @@
 id: failure-0003
 namespace: io.gamefork
 title: NEXT_PUBLIC_* env vars can be baked into the server bundle as literals — runtime config cannot override them
+summary: Next.js (15+, SWC) can compile process.env.NEXT_PUBLIC_* into the server bundle as a string literal, so runtime vars and dashboard settings cannot override it. Set the values in the build environment and verify the deployed output, not the config.
 status: active
 tags: [nextjs, swc, env, cloudflare-workers, opennext, deploy]
 created: 2026-07-02
+source: io.gamefork (promoted from a private wheel)
 origin: Pre-launch production incident on gamefork.io (2026-05-05): play links on production pointed at http://localhost:3001. Root-caused, fixed, and verified in production before launch.
 stack: [nextjs-15, swc, opennext, cloudflare-workers]
 supersedes: null
 superseded_by: null
+verified: 2026-05-05
 ---
 
 ## Context
