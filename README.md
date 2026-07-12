@@ -45,6 +45,7 @@ whether this registry actually works.
 ```markdown
 ---
 id: failure-0001            # <type>-<NNNN>, 4-digit, sequential per directory
+aliases: [failure-0001]     # echoes id, so [[failure-0001]] resolves in an Obsidian vault
 namespace: io.gamefork      # must match the directory
 title: One-line statement of the lesson
 status: active              # active | superseded | deprecated
@@ -79,6 +80,22 @@ Point your agent instructions (`AGENTS.md`, `CLAUDE.md`, system prompt) at this 
 one norm: *"Before touching migrations / deploy config / <your risk area>, grep the relevant
 `wheels/<ns>/failures/` tags. When an entry guides a change, cite its id in the commit."*
 Recall is everything — an unreferenced registry is a graveyard.
+
+## Browsing as an Obsidian vault
+
+The repo doubles as an [Obsidian](https://obsidian.md) vault with zero conversion — clone it
+and open the repository root as a vault:
+
+- `[[failure-0001]]`-style cross-references resolve via each entry's `aliases` (backlinks and
+  the graph view work out of the box). Same-name ids in *different* namespaces are
+  disambiguated by Obsidian's link suggestions.
+- `wheel.base` is a ready-made [Bases](https://help.obsidian.md/bases) dashboard: all entries
+  grouped by namespace, failures with verification dates, and the supersede history.
+- `.obsidian/` is gitignored — personal vault settings are never shared. If you configure
+  attachments or daily notes, point them **outside** `wheels/` (the verifier warns on stray
+  non-entry files, but git is the source of truth, Obsidian is just a viewer).
+- Git stays the only sync channel. Don't wire third-party sync/publish plugins to a clone you
+  also push from.
 
 ## Contributing your namespace
 

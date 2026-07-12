@@ -1,5 +1,6 @@
 ---
 id: failure-0007
+aliases: [failure-0007]
 namespace: io.gamefork
 title: A query string on a Codex CLI MCP server URL silently breaks OAuth discovery (and sandbox-injected configs add a second stale layer)
 summary: Registering a remote MCP server in Codex CLI with a query string in the URL (e.g. ?auth=required) breaks OAuth discovery — `codex mcp list` shows Auth Unsupported, login fails with "No authorization support detected", and gated tools never appear while public read tools still work. Re-register with the clean URL and log in again; sessions running inside a sandbox that injected the stale config additionally need a fresh start to pick up the fix.

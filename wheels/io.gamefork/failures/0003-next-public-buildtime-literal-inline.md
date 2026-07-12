@@ -1,5 +1,6 @@
 ---
 id: failure-0003
+aliases: [failure-0003]
 namespace: io.gamefork
 title: NEXT_PUBLIC_* env vars can be baked into the server bundle as literals — runtime config cannot override them
 summary: Next.js (15+, SWC) can compile process.env.NEXT_PUBLIC_* into the server bundle as a string literal, so runtime vars and dashboard settings cannot override it. Set the values in the build environment and verify the deployed output, not the config.

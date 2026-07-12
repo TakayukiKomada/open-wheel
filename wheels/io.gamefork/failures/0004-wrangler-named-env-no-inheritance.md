@@ -1,5 +1,6 @@
 ---
 id: failure-0004
+aliases: [failure-0004]
 namespace: io.gamefork
 title: Wrangler named environments inherit almost nothing, and `wrangler deploy` without --env updates a different worker than you think
 summary: Wrangler named environments ([env.X]) do not inherit vars/bindings/migrations from the top level, and `wrangler deploy` without --env updates only the top-level worker while the env-routed worker keeps serving stale code. Redeclare everything per env and always deploy with an explicit --env.
