@@ -1,0 +1,77 @@
+# cli/ (npm package "open-wheel") の tag-driven publish。
+# npm Trusted Publishing (OIDC) を使うため長期 npm token はここに置かない。
+# npmjs.com 側で Trusted Publisher に
+#   repo=TakayukiKomada/open-wheel, workflow=publish-npm.yml, environment=(未設定)
+# を先に登録しておくこと (このリポジトリの secrets には何も追加しない)。
+#
+# トリガ: v* タグ push (例: v0.1.0)。cli/package.json の version と
+# タグが一致しない場合は fail し、誤 publish を防ぐ。
+name: Publish npm package
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write   # GitHub Release 作成用
+  id-token: write   # npm Trusted Publishing (OIDC) 用
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cli
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      # Trusted Publishing には OIDC 対応済みの npm CLI が必要 (>= 11.5.1)。
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Verify tag matches package.json version
+        run: |
+          set -euo pipefail
+          pkg_version="$(node -p "require('./package.json').version")"
+          tag_version="${GITHUB_REF_NAME#v}"
+          if [ "$pkg_version" != "$tag_version" ]; then
+            echo "::error::tag v$tag_version does not match cli/package.json version $pkg_version"
+            exit 1
+          fi
+
+      - name: Test
+        run: node --test test/*.test.mjs scripts/*.test.mjs
+
+      - name: Scrub tarball
+        run: node scripts/scrub-package.mjs
+
+      # 初回 v0.1.0 は手元 publish (Trusted Publisher は既存パッケージにしか設定
+      # できない: npm/cli#8544)。既に同版が npm にある場合は publish をスキップし、
+      # GitHub Release 作成だけ行う (タグ再 push や初回タグでも安全な冪等設計)。
+      - name: Check if version already on npm
+        id: exists
+        run: |
+          set -euo pipefail
+          if npm view "open-wheel@${GITHUB_REF_NAME#v}" version >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "open-wheel@${GITHUB_REF_NAME#v} is already on npm — skipping publish"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish to npm
+        if: steps.exists.outputs.exists == 'false'
+        run: npm publish --provenance --access public
+
+      - name: Create GitHub Release
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --title "$GITHUB_REF_NAME" \
+            --notes "See cli/README.md and cli/SPEC.md for what's new. Published to npm as open-wheel@${GITHUB_REF_NAME#v}."
+        env:
+          GH_TOKEN: ${{ github.token }}

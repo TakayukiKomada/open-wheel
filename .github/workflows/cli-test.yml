@@ -1,0 +1,25 @@
+# cli/ (npm package "open-wheel") のユニットテスト。
+# 依存インストール不要 (Node.js 標準機能のみ)。corpus 側の verify.yml とは別系統。
+name: CLI test
+
+on:
+  push:
+    branches: [main]
+    paths: ['cli/**', '.github/workflows/cli-test.yml']
+  pull_request:
+    branches: [main]
+    paths: ['cli/**', '.github/workflows/cli-test.yml']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cli
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: node --test test/*.test.mjs scripts/*.test.mjs
+      - run: node scripts/scrub-package.mjs

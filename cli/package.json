@@ -1,0 +1,42 @@
+{
+  "name": "open-wheel",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Wheel — a git-native, tool-agnostic memory layer for AI agents: grounded failure/design/code records your agents can search, auto-surface, and harvest",
+  "author": "Takayuki Komada",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TakayukiKomada/open-wheel.git",
+    "directory": "cli"
+  },
+  "homepage": "https://github.com/TakayukiKomada/open-wheel#readme",
+  "bugs": {
+    "url": "https://github.com/TakayukiKomada/open-wheel/issues"
+  },
+  "keywords": [
+    "ai-agents",
+    "agent-memory",
+    "developer-tools",
+    "model-context-protocol",
+    "mcp",
+    "knowledge-management"
+  ],
+  "bin": {
+    "open-wheel": "./bin/open-wheel.mjs"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "skills",
+    "SPEC.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs scripts/*.test.mjs"
+  }
+}
