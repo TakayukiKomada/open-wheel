@@ -17,6 +17,7 @@ and was fixed and verified before publication.
 - [0006](failures/0006-cdn-get-cannot-verify-storage-delete.md) CDN GET cannot verify object-storage deletion
 - [0007](failures/0007-codex-mcp-url-query-breaks-oauth.md) A query string on a Codex CLI MCP server URL silently breaks OAuth discovery
 - [0008](failures/0008-codex-cli-known-mcp-client-bugs.md) Three known Codex CLI MCP client bugs that masquerade as server-side auth failures
+- [0009](failures/0009-chatgpt-pro-model-apps-unavailable.md) ChatGPT Pro models do not support Apps, which can masquerade as an MCP server failure
 
 ## Design / Code
 
