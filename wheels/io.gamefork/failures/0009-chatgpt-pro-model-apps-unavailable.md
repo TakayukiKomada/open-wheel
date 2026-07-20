@@ -1,5 +1,6 @@
 ---
 id: failure-0009
+aliases: [failure-0009]
 namespace: io.gamefork
 title: ChatGPT Pro models do not support Apps, which can masquerade as an MCP server failure
 summary: A ChatGPT Pro subscription may use Apps, but a Pro model cannot call them. The app can appear attached and its tools can scan successfully while no tool call reaches the MCP server; switching a fresh chat to a non-Pro model restores the same app without server changes.
