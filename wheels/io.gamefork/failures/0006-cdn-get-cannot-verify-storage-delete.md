@@ -1,5 +1,6 @@
 ---
 id: failure-0006
+aliases: [failure-0006]
 namespace: io.gamefork
 title: You cannot verify object-storage deletion by GETting the public URL — CDN cache keeps serving 200 after a successful delete
 summary: After a successful object-storage delete, the CDN keeps serving the public URL with 200 until the cache TTL expires, so a GET cannot verify deletion. Judge deletion by the storage API's remove() return value, embedded in the delete route's response.

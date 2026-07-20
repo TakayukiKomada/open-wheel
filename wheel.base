@@ -1,0 +1,56 @@
+# Open Wheel dashboard (Obsidian Bases). Open the repository root as a vault.
+# Folder references are relative to the vault root. file.basename excludes the
+# extension (file.name would be "README.md").
+properties:
+  id:
+    displayName: "ID"
+  namespace:
+    displayName: "Namespace"
+  title:
+    displayName: "Title"
+  status:
+    displayName: "Status"
+  verified:
+    displayName: "Verified"
+  stack:
+    displayName: "Stack"
+views:
+  - type: table
+    name: "All entries"
+    filters:
+      and:
+        - file.inFolder("wheels")
+        - 'file.basename != "README"'
+    groupBy:
+      property: namespace
+      direction: ASC
+    order:
+      - id
+      - title
+      - status
+      - verified
+      - created
+  - type: table
+    name: "Failures"
+    filters:
+      and:
+        - file.inFolder("wheels")
+        - 'file.basename != "README"'
+        - 'id.startsWith("failure-")'
+    order:
+      - namespace
+      - id
+      - title
+      - verified
+      - stack
+  - type: table
+    name: "Superseded"
+    filters:
+      and:
+        - 'status == "superseded"'
+    order:
+      - namespace
+      - id
+      - title
+      - superseded_by
+      - created

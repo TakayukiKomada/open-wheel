@@ -1,5 +1,6 @@
 ---
 id: failure-0002
+aliases: [failure-0002]
 namespace: io.gamefork
 title: Column-level REVOKE UPDATE is a no-op while a table-level UPDATE grant remains
 summary: Column-level REVOKE UPDATE (col) has no effect while the role still holds a table-level UPDATE grant. Revoke table-level UPDATE first, then GRANT back only the columns that should be writable.

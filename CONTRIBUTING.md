@@ -6,7 +6,9 @@
    `io.yourproject`). One namespace per team/project. First PR claims it.
 2. **Create entries** under `wheels/<namespace>/{failures,design,code}/NNNN-slug.md`,
    following the entry format in [README.md](README.md). Numbering is sequential and
-   independent per directory.
+   independent per directory. Include `aliases: [<id>]` in the frontmatter so
+   `[[id]]` links resolve when the repo is browsed as an Obsidian vault (the
+   verifier warns when it is missing).
 3. **Add an index**: `wheels/<namespace>/README.md` with one line per entry.
 4. **Run the verifier**: `node scripts/verify-wheel.mjs`. CI runs it on every PR.
 

@@ -1,0 +1,4 @@
+# Obsidian vault local state — the repo can be opened directly as a vault
+# (see README "Browsing as an Obsidian vault"); personal settings are not shared
+.obsidian/
+.smart-env/

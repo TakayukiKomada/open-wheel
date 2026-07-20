@@ -1,5 +1,6 @@
 ---
 id: failure-0001
+aliases: [failure-0001]
 namespace: io.gamefork
 title: SECURITY DEFINER functions silently bypass Row Level Security
 summary: A SECURITY DEFINER function runs with its creator's privileges and ignores Row Level Security entirely — any such function granted to anon/authenticated must re-implement the same visibility checks inside its body, or RLS is effectively off for whoever can call it.

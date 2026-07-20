@@ -9,6 +9,10 @@
 //   5. status is active | superseded | deprecated; superseded requires superseded_by
 //   6. each namespace has a README.md that links every entry (no orphans, no dead links)
 //   7. [[id]] and [[ns/id]] cross-references resolve to existing entries
+//   8. (warning) frontmatter has `aliases: [<id>]` so [[id]] links resolve when the
+//      repo is opened as an Obsidian vault (filenames are NNNN-slug.md, not the id)
+//   9. (warning) stray files — Obsidian vault defaults (attachments, daily notes,
+//      sync conflicted copies) must not land inside wheels/
 //
 // Node builtins only — no install step. Run: node scripts/verify-wheel.mjs
 
@@ -24,8 +28,13 @@ const PREFIX_ALT = Object.values(TYPES).join('|');
 const VALID_STATUS = new Set(['active', 'superseded', 'deprecated']);
 const REQUIRED_KEYS = ['id', 'namespace', 'title', 'summary', 'status', 'created', 'source', 'origin'];
 const NS_PATTERN = /^[a-z0-9]+(\.[a-z0-9-]+)+$/; // reverse-DNS-ish
+// Local-only Obsidian vault dirs (gitignored) — excluded from the stray-file sweep
+const VAULT_LOCAL_DIRS = new Set(['.obsidian', '.smart-env']);
 
 const errors = [];
+// Non-fatal notices (exit 0) — used for the Obsidian-vault conventions so that
+// existing forks/branches without them are not broken retroactively
+const warnings = [];
 
 function parseFrontmatter(text, file) {
   const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
@@ -50,14 +59,25 @@ if (!fs.existsSync(WHEELS_DIR)) {
 } else {
   for (const ns of fs.readdirSync(WHEELS_DIR).sort()) {
     const nsPath = path.join(WHEELS_DIR, ns);
-    if (!fs.statSync(nsPath).isDirectory()) continue;
+    if (!fs.statSync(nsPath).isDirectory()) {
+      // Stray file at wheels/ root (vault attachment / conflicted copy landing spot)
+      warnings.push(`wheels/${ns}: unexpected file — wheels/ holds namespace directories only`);
+      continue;
+    }
+    if (VAULT_LOCAL_DIRS.has(ns)) continue;
     if (!NS_PATTERN.test(ns)) {
       errors.push(`wheels/${ns}: namespace is not reverse-DNS shaped (e.g. io.example)`);
     }
     entriesByNs.set(ns, []);
     for (const type of fs.readdirSync(nsPath).sort()) {
       const typePath = path.join(nsPath, type);
-      if (!fs.statSync(typePath).isDirectory()) continue;
+      if (!fs.statSync(typePath).isDirectory()) {
+        if (type !== 'README.md') {
+          warnings.push(`wheels/${ns}/${type}: unexpected file — a namespace holds README.md and type directories only (stray attachment / conflicted copy?)`);
+        }
+        continue;
+      }
+      if (VAULT_LOCAL_DIRS.has(type)) continue;
       if (!(type in TYPES)) {
         errors.push(`wheels/${ns}/${type}: unknown entry type (allowed: ${TYPE_ALT})`);
         continue;
@@ -65,7 +85,10 @@ if (!fs.existsSync(WHEELS_DIR)) {
       const prefix = TYPES[type];
       const seenNums = new Map();
       for (const name of fs.readdirSync(typePath).sort()) {
-        if (!name.endsWith('.md')) continue;
+        if (!name.endsWith('.md')) {
+          warnings.push(`wheels/${ns}/${type}/${name}: unexpected non-entry file (stray attachment / conflicted copy?)`);
+          continue;
+        }
         const rel = `wheels/${ns}/${type}/${name}`;
         const fnMatch = name.match(/^(\d{4})-[a-z0-9-]+\.md$/);
         if (!fnMatch) {
@@ -99,6 +122,11 @@ if (!fs.existsSync(WHEELS_DIR)) {
         }
         if (fm.verified && fm.verified !== 'null' && !/^\d{4}-\d{2}-\d{2}$/.test(fm.verified)) {
           errors.push(`${rel}: verified must be null or a YYYY-MM-DD date (got "${fm.verified}")`);
+        }
+        // Obsidian vault support: filenames are NNNN-slug.md, so [[failure-0001]]-style
+        // links only resolve through a frontmatter alias carrying the id
+        if (!fm.aliases || !fm.aliases.includes(expectedId)) {
+          warnings.push(`${rel}: frontmatter has no aliases: [${expectedId}] — [[${expectedId}]] links will not resolve in an Obsidian vault`);
         }
         if (fm.id) fullIds.add(`${ns}/${expectedId}`);
       }
@@ -147,11 +175,20 @@ for (const [ns, entries] of entriesByNs) {
   }
 }
 
+// Warnings are non-fatal (exit 0); shown as ::warning:: annotations under GitHub Actions
+for (const w of warnings) {
+  if (process.env.GITHUB_ACTIONS) {
+    console.log(`::warning file=${w.split(':')[0]}::${w}`);
+  } else {
+    console.warn(`  warn: ${w}`);
+  }
+}
+
 if (errors.length > 0) {
   console.error(`open-wheel verify: ${errors.length} problem(s)\n`);
   for (const e of errors) console.error(`  - ${e}`);
   process.exit(1);
 }
 console.log(
-  `open-wheel verify: OK (${fullIds.size} entries across ${entriesByNs.size} namespace(s))`,
+  `open-wheel verify: OK (${fullIds.size} entries across ${entriesByNs.size} namespace(s)${warnings.length ? `, ${warnings.length} warning(s)` : ''})`,
 );

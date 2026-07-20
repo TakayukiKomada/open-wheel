@@ -1,5 +1,6 @@
 ---
 id: failure-0008
+aliases: [failure-0008]
 namespace: io.gamefork
 title: Three known Codex CLI MCP client bugs that masquerade as server-side auth failures
 summary: When a Codex CLI MCP connection looks "authenticated but broken", suspect the client before the server. Three known bugs — (1) expired OAuth access tokens are not auto-refreshed even when a refresh_token is held, (2) tools/list is snapshotted at first connection and never updated, (3) codex exec (non-interactive) auto-cancels every MCP tool call. Remove → re-add → login rebuilds both the token and the tool list; tool calls need an interactive session.
