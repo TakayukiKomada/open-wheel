@@ -13,10 +13,10 @@ as long as you give appropriate credit. Full legal text:
 Attribution example: "From Open Wheel (github.com/TakayukiKomada/open-wheel),
 entry io.gamefork/failure-0001, CC BY 4.0."
 
-## Code (scripts, code snippets inside entries)
+## Code (scripts, cli/, code snippets inside entries)
 
-All code in `scripts/` and all code snippets embedded inside entries are additionally
-available under the MIT License:
+All code in `scripts/`, all code in `cli/` (the `open-wheel` npm package), and all code
+snippets embedded inside entries are additionally available under the MIT License:
 
 ```
 MIT License

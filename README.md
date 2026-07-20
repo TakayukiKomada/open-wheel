@@ -74,6 +74,21 @@ plain words instead.
 Stale entries are never deleted: set `status: superseded` and link the replacement via
 `superseded_by`. A registry that silently rots loses trust; one that shows its lifecycle keeps it.
 
+## CLI
+
+[`cli/`](cli/) is the `open-wheel` npm package: scaffold entries, validate the registry,
+harvest failure drafts from git history, and surface guidance to your AI agent.
+
+```bash
+npx open-wheel init
+npx open-wheel validate
+npx open-wheel rules
+npx open-wheel citations --suggest-reverify
+```
+
+See [cli/README.md](cli/README.md) and [cli/SPEC.md](cli/SPEC.md) for the full command
+reference.
+
 ## Using it with AI agents
 
 Point your agent instructions (`AGENTS.md`, `CLAUDE.md`, system prompt) at this repo and add
@@ -110,7 +125,7 @@ Teams contribute lessons under their own reverse-DNS namespace via PR — see
 ## Current wheels
 
 - **[io.gamefork](wheels/io.gamefork/)** — lessons from operating an AI-first game-sharing
-  platform on Cloudflare Workers + Supabase + Next.js (6 failures published, more incoming).
+  platform on Cloudflare Workers + Supabase + Next.js (9 failures published, more incoming).
 
 ## 日本語概要
 
