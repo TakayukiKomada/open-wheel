@@ -108,7 +108,7 @@ Teams contribute lessons under their own reverse-DNS namespace via PR — see
 ## Current wheels
 
 - **[io.gamefork](wheels/io.gamefork/)** — lessons from operating an AI-first game-sharing
-  platform on Cloudflare Workers + Supabase + Next.js (6 failures published, more incoming).
+  platform on Cloudflare Workers + Supabase + Next.js (9 failures published, more incoming).
 
 ## 日本語概要
 
